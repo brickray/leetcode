@@ -1,0 +1,53 @@
+input1 = {"val" = 3, "left" = {"val" = 9},
+		  "right" = {"val" = 20, "left" = {"val" = 15}, "right" = {"val" = 7}}}
+
+input2 = {"val" = 1, 
+		  "left" = {"val" = 4, "left" = {"val" = 4}, "right" = {"val" = 4}}, 
+		  "right" = {"val" = 5, "right" = {"val" = 5}}}
+
+def recursePush(root, stack)
+	local left = root.left
+	local right = root.right
+
+	if right != null then
+		stack.push(right)
+	end
+
+	if left != null then
+		stack.push(left)
+	end
+
+	if right != null then
+		recursePush(right, stack)
+	end
+	if left != null then
+		recursePush(left, stack)
+	end
+end
+
+stack = {}
+stack.top = 0
+stack.push = def (v) stack[stack.top] = v stack.top = stack.top + 1 end
+stack.pop = def () local ret = stack[stack.top - 1] stack.top = stack.top - 1 return ret end	
+
+def levelOrderBottom(root)
+	stack.push(root)
+	recursePush(root, stack)
+
+	local str = ""
+	while true do
+		local n = stack.pop()
+		str += tostring(n.val)
+		
+		if stack.top == 0 then
+			break
+		end
+		str += "->"
+	end
+
+	return str
+end
+
+print(levelOrderBottom(input1))
+print(levelOrderBottom(input2))
+
