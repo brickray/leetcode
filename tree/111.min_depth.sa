@@ -1,0 +1,28 @@
+input1 = {"val" = 3, "left" = {"val" = 9},
+		  "right" = {"val" = 20, "left" = {"val" = 15}, "right" = {"val" = 7}}}
+
+min = 100
+def recurse(root, depth)
+	local left = root.left
+	local right = root.right
+	if left == null && right == null then
+		if depth < min then
+			min = depth
+		end
+	end
+
+	if left != null then
+		recurse(left, depth + 1)
+	end
+
+	if right != null then
+		recurse(right, depth + 1)
+	end
+end
+
+def minDepth(root)
+	return recurse(root, 1)
+end
+
+minDepth(input1)
+print(min)

@@ -1,0 +1,93 @@
+input1 = "3[a]2[bc]"
+input2 = "3[a2[c]]"
+input3 = "2[abc]3[cd]ef"
+
+def getNumber(c)
+	if c == "1" then
+		return 1
+	elif c == "2" then
+		return 2
+	elif c == "3" then
+		return 3
+	elif c == "4" then
+		return 4
+	elif c == "5" then
+		return 5
+	elif c == "6" then
+		return 6
+	elif c == "7" then
+		return 7
+	elif c == "8" then
+		return 8
+	elif c == "9" then
+		return 9
+	else
+		return false
+	end
+end
+
+def decodeString(s)
+	local stack = {}
+	local stackPtr = 0
+
+	local len = string.len(s)
+	local str = ""
+	local i
+	for i = 0, i < len, i += 1 do
+		char = string.at(s, i)
+		if char == "[" then
+			str = ""
+		elif char == "]" then
+			if str != "" then
+				stack[stackPtr] = str
+				stackPtr += 1
+				str = ""
+			end
+			local a = ""
+			local j = stackPtr - 1
+			for j, j >= 0, j -= 1 do
+				if isint(stack[j]) then
+					stackPtr = j + 1
+					break
+				end
+				
+				str =	string.insert(str, stack[j], 0)
+			end
+
+			local n = stack[j]
+			for j = 0, j < n, j += 1 do
+				a += str
+			end
+
+			stack[stackPtr - 1] = a
+			str = ""
+		elif getNumber(char) then
+			if str != "" then
+				stack[stackPtr] = str
+				stackPtr += 1
+			end
+			local n = getNumber(char)
+			stack[stackPtr] = n
+			stackPtr += 1
+		else
+			str += char
+		end
+
+		if i == len - 1 then
+			if str != "" then
+				stack[stackPtr] = str
+			end
+		end
+	end
+
+	local ret = ""
+	local len = table.len(stack)
+	for i = 0, i < len, i += 1 do
+		ret += stack[i]
+	end
+	return ret
+end
+
+//print(decodeString(input1))
+print(decodeString(input2))
+//print(decodeString(input3))

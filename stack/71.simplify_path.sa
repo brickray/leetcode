@@ -1,0 +1,63 @@
+input1 = "/home/"
+input2 = "/../"
+input3 = "/home//foo/"
+input4 = "/a/./b/../../c/"
+input5 = "/a//b/////c/d//././/.."
+
+def simplifyPath(path)
+	local stack = {}
+	local stackPtr = 0
+	local temp = {}
+	local idx = 0
+	local len = string.len(path)
+	local str = ""
+	local i
+	for i = 0, i < len, i += 1 do
+		local char = string.at(path, i)
+		if char == "/"then
+			if i != 0 then
+				temp[idx] = str
+				idx += 1
+				str = ""
+			end
+		else
+			str += char
+		end
+
+		if i == len - 1 then
+			temp[idx] = str
+		end
+	end
+
+	len = table.len(temp)
+	for i = 0, i < len, i = i + 1 do
+		local str = temp[i]
+		if str == ".." then
+			stackPtr -= 1
+			if stackPtr < 0 then
+				stackPtr = 0
+			end
+		elif str == "" || str == "." then
+			continue
+		else
+			stack[stackPtr] = str
+			stackPtr += 1
+		end
+	end
+
+	local ret = "/"
+	for i = 0, i < stackPtr, i += 1 do
+		ret += stack[i]
+		if i != stackPtr - 1 then
+			ret += "/"
+		end
+	end
+
+	return ret
+end
+
+print(simplifyPath(input1))
+print(simplifyPath(input2))
+print(simplifyPath(input3))
+print(simplifyPath(input4))
+print(simplifyPath(input5))

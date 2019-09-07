@@ -1,0 +1,11 @@
+input1 = "Hello"
+input2 = "here"
+input3 = "LOVELY"
+
+def toLowerCase(str)
+	return string.lower(str)
+end
+
+print(toLowerCase(input1))
+print(toLowerCase(input2))
+print(toLowerCase(input3))

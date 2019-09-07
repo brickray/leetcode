@@ -1,0 +1,40 @@
+input1 = {"left" = {"val" = 1, "left" = {"val" = 2}, "right" = {"val" = 3}},
+		  "right" = {"val" = 1, "left" = {"val" = 2}, "right" = {"val" = 3}}}
+input2 = {"left" = {"val" = 1, "left" = {"val" = 2}},
+		  "right" = {"val" = 1, "right" = {"val" = 2}}}
+input3 = {"left" = {"val" = 1, "left" = {"val" = 2}, "right" = {"val" = 1}},
+		  "right" = {"val" = 1, "left" = {"val" = 1}, "right" = {"val" = 2}}}
+
+def isSameTree(p, q)
+	if p.val != q.val then
+		return false
+	end
+
+	l = true
+	r = true
+	local pl = p.left
+	local ql = q.left
+	if pl != null && ql != null then
+		l = isSameTree(pl, ql)
+	elif pl == ql then
+		l = true
+	else
+		return false
+	end
+
+	local pr = p.right
+	local qr = q.right
+	if pr != null && qr != null then
+		r = isSameTree(pr, qr)
+	elif pr == qr then
+		r = true
+	else
+		return false
+	end
+
+	return l && r
+end
+
+print(isSameTree(input1.left, input1.right))
+print(isSameTree(input2.left, input2.right))
+print(isSameTree(input3.left, input3.right))

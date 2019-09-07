@@ -1,0 +1,51 @@
+input1 = "/*Test program*/
+		 int main()
+		 {
+		     //variable declaration
+			 int a,b,c;
+			 /* This is a test 
+			     multiline
+				 common for
+				 testing */
+		     a = b + c;
+		  }"
+input2 = "a/*comment','line','more_comment*/b"
+
+def removeComments(source)
+	local ret = ""
+	local len = string.len(source)
+	local i
+	for i = 0, i < len, i = i + 1 do
+		local char = string.at(source, i)
+		if char == "/" then
+			local next = string.at(source, i + 1)
+			if next == "/" then
+				local j
+				for j = i + 2, j < len, j = j + 1 do
+					local c = string.at(source, j)
+					if c == "\n" then
+						i = j
+						break
+					end
+				end
+			elif next == "*" then
+				local j
+				for j = i + 2, j < len, j = j + 1 do
+					local c1 = string.at(source, j)
+					local c2 = string.at(source, j + 1)
+					if c1 == "*" && c2 == "/" then
+						i = j + 1
+						break
+					end
+				end
+			end
+		else
+			ret += char
+		end
+	end
+
+	return ret
+end
+
+print(removeComments(input1))
+print(removeComments(input2))

@@ -1,0 +1,37 @@
+input1 = {"0" = 2, "1" = 1, "2" = "+", "3" = 3, "4" = "*"}
+input2 = {"0" = 4, "1" = 13, "2" = 5, "3" = "/", "4" = "+"}
+input3 = {"0" = 10, "1" = 6, "2" = 9, "3" = 3, "4" = "+", "5" = -11, "6" = "*", "7" = "/", "8" = "*", "9" = 17, "10" = "+", "11" = 5, "12" = "+"}
+
+def evalRPN(token)
+	local stack = {}
+	local stackPtr = 0
+	local len = table.len(token)
+	local final = 0
+	local i
+	for i = 0, i < len, i += 1 do
+		local p = token[i]
+		if p == "+" then
+			final =  stack[stackPtr - 2] + stack[stackPtr - 1]
+		elif p == "-" then
+			final =  stack[stackPtr - 2] - stack[stackPtr - 1]
+		elif p == "*" then
+			final =  stack[stackPtr - 2] * stack[stackPtr - 1]
+		elif p == "/" then
+			final =  stack[stackPtr - 2] / stack[stackPtr - 1]
+		else
+			stack[stackPtr] = p
+			stackPtr += 1
+			continue
+		end
+
+		stackPtr -= 2
+		stack[stackPtr] = final
+		stackPtr += 1
+	end
+
+	return final
+end
+
+print(evalRPN(input1))
+print(evalRPN(input2))
+print(evalRPN(input3))

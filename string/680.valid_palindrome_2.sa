@@ -1,0 +1,46 @@
+input1 = "aba"
+input2 = "abca"
+input3 = "aetdeadtea"
+
+def remove(s, i, j)
+	if i == j then
+		return true
+	end
+	while true do
+		local c1 = string.at(s, i)
+		local c2 = string.at(s, j)
+		if(c1 != c2) then
+			return false
+		end
+
+		i += 1
+		j -= 1
+		if j == i || j - i == 1 then
+			return true
+		end
+	end
+end
+
+def validPalindrome(s)
+	local len = string.len(s)
+	local b = 0
+	local e = len - 1
+	while true do
+		local c1 = string.at(s, b)
+		local c2 = string.at(s, e)
+
+		if c1 != c2 then
+			return remove(s, b + 1, e) || remove(s, b, e - 1)
+		end
+
+		b += 1
+		e -= 1
+		if e == b || e - b == 1 then
+			return true
+		end
+	end
+end
+
+print(validPalindrome(input1))
+print(validPalindrome(input2))
+print(validPalindrome(input3))

@@ -1,0 +1,54 @@
+input1 = {"val" = 5, 
+		  "left" = {"val" = 4, "left" = {"val" = 1}, "right" = {"val" = 1}}, 
+		  "right" = {"val" = 5, "right" = {"val" = 5}}}
+input2 = {"val" = 1, 
+		  "left" = {"val" = 4, "left" = {"val" = 4}, "right" = {"val" = 4}}, 
+		  "right" = {"val" = 5, "right" = {"val" = 5}}}
+
+def recurse(root)
+	if root.left != null then
+		recurse(root.left)
+	end
+	
+	print(root.val)
+
+	if root.right != null then
+		recurse(root.right)
+	end
+end
+
+def iterate(root)
+	local stack = {}
+	local top = 0
+	local bottom = 0
+	local node = root
+	while true do
+		while true do 
+			if node != null then
+				stack[top] = node
+				top += 1
+				node = node.left
+			else
+				break
+			end
+		end
+		
+		if top == bottom then
+			break
+		end
+		
+		node = stack[top - 1]
+		print(node.val)
+		top -= 1
+
+		node = node.right
+	end
+end
+
+recurse(input1)
+print("-----------")
+iterate(input1)
+print("-----------")
+recurse(input2)
+print("-----------")
+iterate(input2)

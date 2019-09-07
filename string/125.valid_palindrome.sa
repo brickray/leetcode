@@ -1,0 +1,40 @@
+input1 = "A man, a plan, a canal: Panama"
+input2 = "race a car"
+input3 = "haahhaah"
+
+def isPalindrome(s)
+	s = string.lower(s)
+	local filter = ""
+	local len = string.len(s)
+	local i
+	for i = 0, i < len, i += 1 do
+		local c = string.at(s, i)
+		if string.isletter(c) || string.isdigit(c) then
+			filter += c
+		end
+	end
+
+	local b = 0
+	local e = string.len(filter) - 1
+	while true do
+		local c1 = string.at(filter, b)
+		local c2 = string.at(filter, e)
+		
+		if c1 != c2 then
+			return false
+		end
+
+		b += 1
+		e -= 1
+
+		if b - e == 1 || b == e then
+			break
+		end
+	end
+
+	return true
+end
+
+print(isPalindrome(input1))
+print(isPalindrome(input2))
+print(isPalindrome(input3))

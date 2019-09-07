@@ -1,0 +1,29 @@
+input1 = {"val" = 1, "left" = {"val" = 1, "left" = {"val" = 1}, "right" = {"val" = 1}},
+		"right" = {"val" = 1, "right" = {"val" = 1}}}
+input2 = {"val" = 2, "left" = {"val" = 2, "left" = {"val" = 5}, "right" = {"val" = 2}},
+		"right" = {"val" = 2}}
+
+val = null
+def isUnivalTree(root)
+	val = root.val
+	local left = true
+	local right = true
+	if root.left != null then
+		if val != root.left.val then
+			return false
+		end
+		left = isUnivalTree(root.left)
+	end
+
+	if root.right != null then
+		if val != root.right.val then
+			return false
+		end
+		right = isUnivalTree(root.right)
+	end
+
+	return left && right
+end
+
+print(isUnivalTree(input1))
+print(isUnivalTree(input2))

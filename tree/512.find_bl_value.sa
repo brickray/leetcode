@@ -1,0 +1,27 @@
+input1 = {"val" = 5, "left" = {"val" = 1}, "right" = {"val" = 3}}
+input2 = {"val" = 1, "left" = {"val" = 2, "left" = {"val" = 4}},
+		  "right" = {"val" = 3, "left" = {"val" = 5, "left" = {"val" = 7}}, "right" = {"val" = 6}}}
+
+maxDepth = 0
+val = 0
+
+def findBottomLeftValue(root, depth)
+	if depth > maxDepth then
+		maxDepth = depth
+		val = root.val
+	end
+
+	if root.left != null then
+		findBottomLeftValue(root.left, depth + 1)
+	end
+
+	if root.right != null then
+		findBottomLeftValue(root.right, depth + 1)
+	end
+end
+
+findBottomLeftValue(input1, 1)
+print(val)
+
+findBottomLeftValue(input2, 1)
+print(val)

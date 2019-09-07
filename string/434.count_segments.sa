@@ -1,0 +1,39 @@
+input1 = "Hello, my name is john"
+input2 = "   sas fds 234d"
+
+def countSegments(s)
+	local ret = 0
+	local str = ""
+	local len = string.len(s)
+	local i
+	for i = 0, i < len, i += 1 do
+		local char = string.at(s, i)
+		if char != " " then
+			str += char
+		else
+			if str != "" then
+				ret += 1
+				str = ""
+			end
+
+			local j = i + 1
+			for j, j < len, j += 1 do
+				if string.at(s, j) == " " then
+					continue
+				else
+					i = j - 1
+					break
+				end
+			end
+		end
+
+		if i == len - 1 && str != "" then
+			ret += 1
+		end
+	end
+
+	return ret
+end
+
+print(countSegments(input1))
+print(countSegments(input2))

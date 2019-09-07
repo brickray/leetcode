@@ -1,0 +1,9 @@
+input1 = "hello"
+input2 = "Hannah"
+
+def reverseString(str)
+	return string.reverse(str)
+end
+
+print(reverseString(input1))
+print(reverseString(input2))

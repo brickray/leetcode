@@ -1,0 +1,35 @@
+nums1 = {"0" = 1, "1" = 2, "2" = 3}
+nums2 = {"0" = 2, "1" = 5, "2" = 6}
+
+def merge(t1, t2)
+	local ret = {}
+	local m = table.len(t1)
+	local n = table.len(t2)
+	local i = 0
+	local j = 0
+	local k
+	for k = 0, k < m + n, k += 1 do
+		if i < m && j < n then
+			if t1[i] < t2[j] then
+				ret[k] = t1[i]
+				i += 1
+			else
+				ret[k] = t2[j]
+				j += 1
+			end
+		elif i < m then
+			ret[k] = t1[i]
+			i += 1
+		else
+			ret[k] = t2[j]
+			j += 1
+		end
+	end
+
+	return ret
+end
+
+ret = merge(nums1, nums2)
+for i = 0, i < table.len(ret), i += 1 do
+	print(ret[i])
+end

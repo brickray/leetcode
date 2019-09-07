@@ -1,0 +1,40 @@
+input1 = {"val" = 1, "left" = {"val" = 2}, "right" = {"val" = 3}}
+input2 = {"val" = 4, "left" = {"val" = 9, "left" = {"val" = 5}, "right" = {"val" = 1}}, "right" = {"val" = 0}}
+
+
+def recurse(root, str, tb)
+	str += tostring(root.val)
+
+	local left = root.left
+	local right = root.right
+	if left == null && right == null then
+		tb[tb.idx] = toint(str)
+		tb.idx = tb.idx + 1
+	end
+
+	if left != null then
+		recurse(left, str, tb)
+	end
+
+	if right != null then
+		recurse(right, str, tb)
+	end
+end
+
+def sumNumbers(root)
+	local tb = {}
+	tb.idx = 0
+	recurse(root, "", tb)
+	local ret = 0
+	local i
+	for i = 0, i < tb.idx, i += 1 do
+		ret += tb[i]
+	end
+
+	return ret
+end
+
+print(sumNumbers(input1))
+print("--------------")
+print(sumNumbers(input2))
+

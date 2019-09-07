@@ -1,0 +1,35 @@
+input1 = "abbaca"
+input2 = "acbdaadbca"
+input3 = "agreehyggy"
+
+def removeDuplicates(S)
+	local stack = {}
+	local stackPtr = 0
+	local ret = ""
+	local len = string.len(S)
+	local i
+	for i = 0, i < len, i = i + 1 do
+		local char = string.at(S, i)
+		if stackPtr == 0 then
+			stack[stackPtr] = char
+			stackPtr = stackPtr + 1
+		else
+			if stack[stackPtr - 1] == char then
+				stackPtr = stackPtr - 1
+			else
+				stack[stackPtr] = char
+				stackPtr = stackPtr + 1
+			end
+		end
+	end
+
+	for i = 0, i < stackPtr, i = i + 1 do
+		ret = ret + stack[i]
+	end
+
+	return ret
+end
+
+print(removeDuplicates(input1))
+print(removeDuplicates(input2))
+print(removeDuplicates(input3))

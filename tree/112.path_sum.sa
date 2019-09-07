@@ -1,0 +1,49 @@
+input1 = {"val" = 5, "left" = {"val" = 4, "left" = {"val" = 11, "left" = {"val" = 7}, "right" = {"val" = 2}}},
+		"right" = {"val" = 8, "left" = {"val" = 13}, "right" = {"val" = 4, "right" = {"val" = 1}}}}
+
+def recurse(root, sum, ls, str)
+	str += tostring(root.val)
+	ls += root.val
+	local s = str
+
+	local left = root.left
+	local right = root.right
+	if left == null && right == null then
+		if ls == sum then
+			print(str)
+			return true
+		else
+			return false
+		end
+	end
+
+	if left != null then
+		str += "->"
+		local l = recurse(left, sum, ls, str)
+		if l then 
+			return true 
+		end
+		str = s
+	end
+
+	if right != null then
+		str += "->"
+		local r = recurse(right, sum, ls, str)
+		if r then 
+			return true
+		end
+		str = s
+	end
+
+	return false
+end
+
+def hasPathSum(root, sum)
+	return recurse(root, sum, 0, "")
+end
+
+print(hasPathSum(input1, 22))
+print("-------------------")
+print(hasPathSum(input1, 18))
+print("-------------------")
+print(hasPathSum(input1, 23))

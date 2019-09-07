@@ -1,0 +1,67 @@
+input1 = {"0" = 4.0, "1" = 1.0, "2" = 8.0, "3" = 7.0}
+input2 = {"0" = 1.0, "1" = 2.0, "2" = 1.0, "3" = 2.0}
+
+def solve(nums)
+	local len = table.len(nums)
+	if len == 0 then
+		return false
+	end
+	if len == 1 then
+		return math.abs(nums[0] - 24) < 0.001
+	end
+
+	local i 
+	local j
+	for i = 0, i < len, i += 1 do
+		for j = 0, j < len, j += 1 do
+			if i != j then
+				local t = {}
+				local ptr = 0
+				local k
+				for k = 0, k < len, k += 1 do
+					if k !=i && k != j then
+						t[ptr] = nums[k]
+						ptr += 1
+					end
+				end
+				for k = 0, k < 4, k += 1 do
+					if k < 2 && j > i then
+						continue
+					end
+					if k == 0 then
+						t[ptr] = nums[i] + nums[j]
+						ptr += 1
+					elif k == 1 then
+						t[ptr] = nums[i] * nums[j]
+						ptr += 1
+					elif k == 2 then
+						t[ptr] = nums[i] - nums[j]
+						ptr += 1
+					else
+						if nums[j] != 0 then
+							t[ptr] = nums[i]/nums[j]
+							ptr += 1
+						else 
+							continue
+						end
+					end
+					if solve(t) then
+						return true
+					end
+
+					table.remove(t, tostring(ptr - 1))
+					ptr -= 1
+				end
+			end
+		end
+	end
+
+	return false
+end
+
+def judgePoint24(nums)
+	return solve(nums)
+end
+
+print(judgePoint24(input1))
+print(judgePoint24(input2))

@@ -1,0 +1,76 @@
+input1 = {"0" = -7, "1" = -3, "2" = 2, "3" = 3, "4" = 11}
+input2 = {"0" = -4, "1" = -1, "2" = 0, "3" = 3, "4" = 10}
+
+def sortedSquare(tb)
+	local ret = {}
+	local num = table.len(tb)
+	local s = 0
+	local e = num - 1
+
+	local t0 = {}
+	local t1 = {}
+	while true do
+		if tb[s] < 0 then
+			t0[s] = tb[s] * tb[s]
+		else
+			break	
+		end
+
+		s += 1
+		if s >= num then
+			break
+		end 
+	end
+
+	local i = 0
+	while true do
+		if tb[e] >= 0 then
+			t1[i] = tb[e] * tb[e]
+		else
+			break	
+		end
+
+		e -= 1
+		i += 1
+		if e < 0 then
+			break
+		end 
+	end
+
+	local j = table.len(t0) - 1
+	local k = table.len(t1) - 1
+
+	local ptr = 0
+	while true do
+		local b = j >= 0
+		local c = k >= 0
+		if b && c then
+			if t0[j] < t1[k] then
+				ret[ptr] = t0[j]
+				j -= 1
+			else
+				ret[ptr] = t1[k]
+				k -= 1
+			end
+		elif b then
+			ret[ptr] = t0[j]
+			j -= 1
+		else
+			ret[ptr] = t1[k]
+			k -= 1
+		end
+
+		ptr += 1
+		if ptr >= num then
+			break
+		end
+	end
+
+	return ret
+end
+
+ret = sortedSquare(input2)
+
+for i = 0, i < table.len(ret), i += 1 do
+	print(ret[i])
+end

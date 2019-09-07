@@ -1,0 +1,48 @@
+input1 = "()"
+input2 = "()[]{}"
+input3 = "(]"
+input4 = "([)]"
+input5 = "{[]}"
+input6 = "(()())(())"
+input7 = "(()())(())(()(()))"
+input8 = "()()"
+
+def isValid(s)
+	local stack = {}
+	local stackPtr = 0
+	local len = string.len(s)
+	local i
+	for i = 0, i < len, i = i + 1 do
+		local char = string.at(s, i)
+		if char == '[' || char == '(' || char == '{' then
+			stack[stackPtr] = char
+			stackPtr = stackPtr + 1
+		elif char == ']' then
+			if stack[stackPtr - 1] != '[' then
+				return false
+			end
+			stackPtr -= 1
+		elif char == ')' then
+			if stack[stackPtr - 1] != '(' then
+				return false
+			end
+			stackPtr -= 1
+		else	
+			if stack[stackPtr - 1] != '{' then
+			    return false
+			end
+			stackPtr -= 1
+		end
+	end
+
+	return true
+end
+
+print(isValid(input1))
+print(isValid(input2))
+print(isValid(input3))
+print(isValid(input4))
+print(isValid(input5))
+print(isValid(input6))
+print(isValid(input7))
+print(isValid(input8))

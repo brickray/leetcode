@@ -1,0 +1,56 @@
+input1 = {"0" = "bella", "1" = "label", "2" = "roller"}
+input2 = {"0" = "cool", "1" = "lock", "2" = "cook"}
+
+def commonChars(A)
+	local ret = {}
+	local ptr = 0
+	
+	local temp = {}
+	num = table.len(A)
+	local i
+	local j
+	for j = 0, j < num, j = j + 1 do 
+		str = A[j]
+		temp[j] = {}
+		for i = 0, i < string.len(str), i = i + 1 do
+			local char = string.at(str, i)
+			if type(temp[j][char]) == "null" then
+				temp[j][char] = 1
+			else
+				temp[j][char] = temp[j][char] + 1
+			end 
+		end
+	end
+
+	local min
+	local idx = 0
+	local iter = def(k, v)
+		min = v
+		local i
+		for i = 1, i < num, i = i + 1 do
+			if type(temp[i][k]) == "null" then
+				min = 0
+				break
+			end
+
+			if min > temp[i][k] then
+				min = temp[i][k]
+			end
+		end
+
+		idx = table.len(ret)
+		for i = 0, i < min, i += 1 do
+			ret[idx] = k
+			idx = idx + 1
+		end
+	end
+
+	table.foreach(temp[0], iter)
+
+	return ret
+end
+
+ret = commonChars(input1)
+for i = 0, i < table.len(ret), i = i + 1 do
+	print(ret[i])
+end

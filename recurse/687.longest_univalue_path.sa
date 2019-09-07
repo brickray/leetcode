@@ -1,0 +1,40 @@
+input1 = {"val" = 5, 
+		  "left" = {"val" = 4, "left" = {"val" = 1}, "right" = {"val" = 1}}, 
+		  "right" = {"val" = 5, "right" = {"val" = 5}}}
+input2 = {"val" = 1, 
+		  "left" = {"val" = 4, "left" = {"val" = 4}, "right" = {"val" = 4}}, 
+		  "right" = {"val" = 5, "right" = {"val" = 5}}}
+
+ans = 0
+def arrowLength(node)
+	if node == null then
+		return 0
+	end
+
+	local left = arrowLength(node.left)
+	local right = arrowLength(node.right)
+	local arrowLeft = 0
+	local arrowRight = 0
+	if node.left != null then
+		if node.left.val == node.val then
+			arrowLeft += left + 1
+		end
+	end
+
+	if node.right != null then
+		if node.right.val == node.val then
+		    arrowRight += right + 1
+		end
+	end
+
+	ans = math.max(ans, arrowLeft + arrowRight)
+	return math.max(arrowLeft, arrowRight)
+end
+
+def longestUnivaluePath(root)
+	arrowLength(root)
+	return ans
+end
+
+print(longestUnivaluePath(input1))
+print(longestUnivaluePath(input2))

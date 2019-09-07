@@ -1,0 +1,49 @@
+input1 = "()"
+input2 = "(())"
+input3 = "()()"
+input4 = "(()(()))"
+input5 = "((((()))))"
+
+def scoreOfParentheses(S)
+	local stack = {}
+	local stackPtr = 0
+	local idx = 0
+	local len = string.len(S)
+
+	local need = false
+	local i
+	for i = 0, i < len, i = i + 1 do
+		local char = string.at(S, i)
+		if char == ")" then
+			if need then
+				stack[stackPtr] = idx
+				stackPtr += 1
+			end
+			need = false
+			idx -= 1
+		else
+			need = true
+			idx += 1
+		end
+	end
+
+	local final = 0
+	len = table.len(stack)
+	for i = 0, i < len, i = i + 1 do
+		local base = stack[i] - 1
+		if base == 0 then 
+			final = final + 1
+		else
+			final = final + toint(math.pow(2, base))
+		end
+	end
+
+	return final
+
+end
+
+print(scoreOfParentheses(input1))
+print(scoreOfParentheses(input2))
+print(scoreOfParentheses(input3))
+print(scoreOfParentheses(input4))
+print(scoreOfParentheses(input5))

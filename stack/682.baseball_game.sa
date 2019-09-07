@@ -1,0 +1,35 @@
+input1 = {"0" = 5, "1" = 2, "2" = "C", "3" = "D", "4" = "+"}
+input2 = {"0" = 5, "1" = -2, "2" = 4, "3" = "C", "4" = "D", "5" = 9, "6" = "+", "7" = "+"}
+
+def calPoints(ops)
+	local stack = {}
+	local stackPtr = 0
+	local len = table.len(ops)
+	local i
+	for i = 0, i < len, i = i + 1 do
+		local p = ops[i]
+		if p == "C" then
+			stackPtr = stackPtr - 1
+		elif p == "D" then
+			stack[stackPtr] = stack[stackPtr - 1] * 2
+			stackPtr = stackPtr + 1
+		elif p == "+" then
+			stack[stackPtr] = stack[stackPtr - 1] + stack[stackPtr - 2]
+			stackPtr = stackPtr + 1
+		else
+			stack[stackPtr] = p
+			stackPtr = stackPtr + 1
+		end
+	end
+
+	local final = 0
+	len = table.len(stack)
+	for i = 0, i < len, i = i + 1 do
+		final = final + stack[i]
+	end
+
+	return final
+end
+
+print(calPoints(input1))
+print(calPoints(input2))

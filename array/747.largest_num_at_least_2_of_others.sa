@@ -1,0 +1,37 @@
+input1 = {"0" = 3, "1" = 6, "2" = 1, "3" = 0}
+input2 = {"0" = 1, "1" = 2, "2" = 3, "3" = 4}
+input3 = {"0" = 0, "1" = 0, "2" = 0, "3" = 1}
+
+def dominantIndex(nums)
+	size = table.len(nums)
+	if size == 1 then
+		return 0
+	end
+
+	local max = nums[0]
+	local smax = -1
+	local index = 0
+	local i
+	for i = 1, i < size, i += 1 do
+		if nums[i] > max then
+			max = nums[i]
+			index = i
+		end
+	end
+
+	for i = 0, i < size, i += 1 do
+		if nums[i] > smax && nums[i] < max then
+			smax = nums[i]
+		end
+	end
+
+	if smax == 0 then return index end
+	if max / smax >= 2 then
+		return index
+	else
+		return -1
+	end
+end
+
+ret = dominantIndex(input3)
+print(ret)
