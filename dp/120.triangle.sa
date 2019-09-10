@@ -1,0 +1,49 @@
+input1 = {"0" = {"0" = 2}, "1" = {"0" = 3, "1" = 4}, "2" = {"0" = 6, "1" = 5, "2" = 7},
+		  "3" = {"0" = 4, "1" = 1, "2" = 8, "3" = 3}}
+
+min = 65536
+def recurse(triangle, x, y, sum)
+	local t = triangle[y][x]
+	if y == #triangle - 1 then
+		sum += t
+		if min > sum then
+			min = sum
+		end
+		return
+	end
+
+	recurse(triangle, x, y + 1, sum + t)
+	recurse(triangle, x + 1, y + 1, sum + t)
+end
+
+def minimumTotal(triangle)
+	min = 65536
+	recurse(triangle, 0, 0, 0)
+	return min
+end
+
+def minimumTotal_dp(triangle)
+	local len = #triangle
+	local dp = {}
+	local i
+	for i = 0, i < len, i += 1 do
+		dp[i] = {}
+	end
+
+	for i = len - 1, i >= 0, i -= 1 do
+		local w = #triangle[i]
+		local j
+		for j = 0, j < w, j += 1 do
+			if i == len - 1 then
+				dp[i][j] = triangle[i][j]
+			else
+				dp[i][j] = triangle[i][j] + math.min(dp[i + 1][j], dp[i + 1][j + 1])
+			end
+		end
+	end
+
+	return dp[0][0]
+end
+
+print(minimumTotal(input1))
+print(minimumTotal_dp(input1))

@@ -1,0 +1,39 @@
+input1 = {"val" = 1, "next" = {"val" = 2}}
+input2 = {"val" = 1, "next" = {"val" = 2, "next" = {"val" = 2, "next" = {"val" = 1}}}}
+
+def isPalindrome(link)
+	local tb = {}
+	tb.top = 0
+	tb.push = def (v) tb[tb.top] = v tb.top = tb.top + 1 end
+	tb.pop = def() tb.top = tb.top - 1 return tb[tb.top] end
+	local node = link
+	while true do
+		tb.push(node.val)
+
+		node = node.next
+		if node == null then
+			break
+		end
+	end
+
+	local len = tb.top
+	local s = 0
+	local e = len - 1
+	local mid = (len - 1) / 2.0
+	while true do
+		if tb[s] != tb[e] then
+			return false
+		end
+
+		s += 1
+		e -= 1
+		if s >= mid then
+			break
+		end
+	end
+
+	return true
+end
+
+print(isPalindrome(input1))
+print(isPalindrome(input2))

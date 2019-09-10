@@ -1,0 +1,226 @@
+input1 = {"0" = 89, "1" = 45, "2" = 68, "3" = 90, "4" = 29, "5" = 34, "6" = 17}
+
+def print_array(array)
+	local len = #array
+	local str = ""
+	local i
+	for i = 0, i < len, i += 1 do
+		str += tostring(array[i])
+		str += " "
+	end
+	print(str)
+end
+
+def great(a, b)
+	return a >= b
+end
+
+def less(a, b)
+	return a <= b
+end
+
+//Ñ¡ÔñÅÅÐò
+def selection_sort(array, sort_func)
+	local ret = {}
+	table.copy(ret, array)
+	local len = #ret
+	local v
+	local i
+	for i = 0, i < len, i += 1 do
+		v = ret[i]
+		local idx = i
+		local j
+		for j = i + 1, j < len, j += 1 do
+			if sort_func(ret[j], v) then
+				idx = j
+				v = ret[j]
+			end
+		end
+		
+		local temp = ret[i]
+		ret[i] = v
+		ret[idx] = temp
+	end
+
+	return ret
+end
+
+//Ã°ÅÝÅÅÐò
+def bubble_sort(array, sort_func)
+	local ret = {}
+	table.copy(ret, array)
+	local len = #ret
+	local i
+	for i = 0, i < len - 1, i += 1 do
+		local loop = (len - i) - 1
+		local j 
+		for j = 0, j < loop, j += 1 do
+			if sort_func(ret[j + 1], ret[j]) then
+				local temp = ret[j]
+				ret[j] = ret[j + 1]
+				ret[j + 1] = temp
+			end
+		end
+	end
+
+	return ret
+end
+
+//ºÏ²¢ÅÅÐò
+def merge(array1, array2, sort_func)
+	local ret = {}
+	local len1 = #array1
+	local len2 = #array2
+	local totalLen = len1 + len2
+	local j = 0
+	local k = 0
+	local i
+	for i = 0, i < totalLen, i += 1 do
+		if j >= len1 then
+			ret[i] = array2[k]
+			k += 1
+			continue
+		end
+		if k >= len2 then
+			ret[i] = array1[j]
+			j += 1
+			continue
+		end
+
+		local t1 = array1[j]
+		local t2 = array2[k]
+		if sort_func(t1, t2) then
+			ret[i] = t1
+			j += 1
+		else
+			ret[i] = t2
+			k += 1
+		end
+	end
+
+	return ret
+end
+
+def merge_sort(array, sort_func)
+	local len = #array
+	if len == 1 then
+		return array
+	end
+	local array1 = {}
+	local array2 = {}
+	local mid = len / 2
+	local i
+	for i = 0, i < len, i += 1 do
+		if i < mid then
+			array1[i] = array[i]
+		else
+			array2[i - mid] = array[i]
+		end
+	end
+
+	local ret1 = merge_sort(array1, sort_func)
+	local ret2 = merge_sort(array2, sort_func)
+	local ret = merge(ret1, ret2, sort_func)
+	return ret
+end
+
+//¿ìËÙÅÅÐò
+def quick_sort_recurse(array, left, right, sort_func)
+	if left > right then
+		return
+	end
+	
+	local i = left
+	local j = right
+	local t
+	local temp = array[left]
+	while i != j do
+		while sort_func(temp, array[j]) && i < j do
+			j -= 1
+		end
+		while sort_func(array[i], temp) && i < j do
+			i += 1
+		end
+		if i < j then
+			t = array[i]
+			array[i] = array[j]
+			array[j] = t
+		end
+	end
+
+	array[left] = array[i]
+	array[i] = temp
+
+	quick_sort_recurse(array, left, i - 1, sort_func)
+	quick_sort_recurse(array, i + 1, right, sort_func)
+end
+
+def quick_sort(array, sort_func)
+	local ret = {}
+	table.copy(ret, array)
+	quick_sort_recurse(ret, 0, #ret - 1, sort_func)
+
+	return ret
+end
+
+//Í°ÅÅÐò
+def bucket_sort(array, descend)
+	local bucket = {}
+	local len = #array
+	local min = array[0]
+	local max = min
+	local i
+	for i = 0, i < len, i += 1 do
+		local n = array[i]
+		if n > max then	
+			max = n
+		end
+		if n < min then
+			min = n
+		end
+		if bucket[n] == null then
+			bucket[n] = 1
+		else
+			bucket[n] = bucket[n] + 1
+		end
+	end
+
+	local idx = 0
+	if descend then
+		for i = max, i >= min, i -= 1 do
+			local nn = bucket[i]
+			local j
+			if nn != null then
+				for j = 0, j < nn, j += 1 do
+					array[idx] = i
+					idx += 1
+				end 
+			end
+		end 
+	else
+		for i = min, i <= max, i += 1 do
+			local nn = bucket[i]
+			local j
+			if nn != null then
+				for j = 0, j < nn, j += 1 do
+					array[idx] = i
+					idx += 1
+				end 
+			end
+		end 
+	end
+
+	return array
+end
+
+seed(os.time())
+input = {}
+local i
+for i = 0, i < 20, i += 1 do
+	input[i] = uniformInt(-100, 100)
+end
+print_array(selection_sort(input, great))
+print_array(bubble_sort(input, great))
+print_array(merge_sort(input, great))
+print_array(quick_sort(input, great))
+print_array(bucket_sort(input, true))

@@ -1,0 +1,65 @@
+input1 = "abc"
+input2 = "aaa"
+input3 = "abcdedcba"
+
+def isPalindrome(str, s, e)
+	local mid = (s + e) / 2
+	local j = e
+	for local i = s, i <= mid, i += 1 do
+		if string.at(str, i) != string.at(str, j) then
+			return false
+		end
+
+		j -= 1
+	end 
+
+	return true
+end
+
+def countSubstrings(s)
+	local count = #s
+	local len = count
+	for local i = 2, i <= len, i += 1 do
+		for local j = 0, j <= len - i, j += 1 do
+			if isPalindrome(s, j, j + i - 1) then
+				count += 1
+			end
+		end
+	end
+
+	return count
+end
+
+def count(str, s, e)
+	local len = #str
+	local ret = 0
+	while s >= 0 && e < len do
+		if string.at(str, s) == string.at(str, e) then
+			ret += 1
+		end
+		s -= 1
+		e += 1
+	end
+
+	return ret
+end
+
+def countSubstrings_dp(s)
+	local ret = 0
+	local len = #s
+	for local i = 0, i < len, i += 1 do
+		ret += count(s, i, i)
+		ret += count(s, i, i + 1)
+	end
+
+	return ret
+end
+
+print(countSubstrings(input1))
+print(countSubstrings_dp(input1))
+print("---------------------")
+print(countSubstrings(input2))
+print(countSubstrings_dp(input2))
+print("---------------------")
+print(countSubstrings(input3))
+print(countSubstrings_dp(input3))

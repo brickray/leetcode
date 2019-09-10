@@ -1,0 +1,62 @@
+input1 = {"0" = 1, "1" = 4, "2" = 3, "3" = 2}
+input2 = {"0" = 7, "1" = 4, "2" = 9, "3" = 10, "4" = 2, "5" = 1}
+
+def great(a, b)
+	return a >= b
+end
+
+def less(a, b)
+	return a <= b
+end
+
+def quick_sort_recurse(array, left, right, sort_func)
+	if left > right then
+		return
+	end
+	
+	local i = left
+	local j = right
+	local t
+	local temp = array[left]
+	while i != j do
+		while sort_func(temp, array[j]) && i < j do
+			j -= 1
+		end
+		while sort_func(array[i], temp) && i < j do
+			i += 1
+		end
+		if i < j then
+			t = array[i]
+			array[i] = array[j]
+			array[j] = t
+		end
+	end
+
+	array[left] = array[i]
+	array[i] = temp
+
+	quick_sort_recurse(array, left, i - 1, sort_func)
+	quick_sort_recurse(array, i + 1, right, sort_func)
+end
+
+def quick_sort(array, sort_func)
+	local ret = {}
+	table.copy(ret, array)
+	quick_sort_recurse(ret, 0, #ret - 1, sort_func)
+
+	return ret
+end
+
+def arrayPairSum(nums)
+	local ret = quick_sort(nums, less)
+	local sum = 0
+	local len = #ret
+	for local i = 0, i < len, i += 2 do
+		sum += ret[i]
+	end 
+
+	return sum
+end
+
+print(arrayPairSum(input1))
+print(arrayPairSum(input2))

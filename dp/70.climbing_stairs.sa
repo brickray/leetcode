@@ -1,0 +1,37 @@
+num = 0
+def climb_recurse(n)
+	if n < 0 then
+		return 
+	end
+	if n == 0 then
+		num += 1
+		return
+	end
+
+	climb_recurse(n - 1)
+	climb_recurse(n - 2)
+end
+
+def climbStairs_bruteForce(n)
+	num = 0
+	climb_recurse(n)
+	return num
+end
+
+def climbStairs_dp(n)
+	if n <= 1 then
+		return 1
+	end
+	local dp = {}
+	local i = 0
+	dp[0] = 1
+	dp[1] = 2
+	for i = 2, i < n, i += 1 do
+		dp[i] = dp[i - 1] + dp[i - 2]
+	end
+
+	return dp[n - 1]
+end
+
+print(climbStairs_bruteForce(7))
+print(climbStairs_dp(7))

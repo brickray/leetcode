@@ -1,0 +1,37 @@
+input1 = {"0" = 5, "1" = 2, "2" = 6, "3" = 1}
+
+def print_array(array)
+	local len = #array
+	local str = ""
+	local i
+	for i = 0, i < len, i += 1 do
+		str += tostring(array[i])
+		str += " "
+	end
+	print(str)
+end
+
+def countSmaller_bruteForce(array)
+	local ret = {}
+	local len = #array
+	local i
+	for i = 0, i < len, i += 1 do
+		local v = array[i]
+		local count = 0
+		local j
+		for j = i + 1, j < len, j += 1 do
+			if v > array[j] then
+				 count += 1
+			end
+		end
+		ret[i] = count
+	end
+
+	return ret
+end
+
+def countSmaller_dc(array)
+
+end
+
+print_array(countSmaller_bruteForce(input1))

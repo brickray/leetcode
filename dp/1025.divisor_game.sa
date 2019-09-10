@@ -1,0 +1,6 @@
+
+def divisorGame(n)
+
+end
+
+print(divisorGame(3))

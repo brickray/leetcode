@@ -1,0 +1,30 @@
+i2 = {"val" = 2, "next" = {"val" = 0, "next" = {"val" = -4}}}
+i2.next.next.next = i2
+input1 = {"val" = 3, "next" = i2}
+input2 = {"val" = 3, "next" = {"val" = 4, "next" = {"val" = 7}}}
+
+def hasCycle(link)
+	local fast = link
+	local slow = link
+
+	while true do
+		slow = slow.next
+		if fast.next then 
+			fast = fast.next
+			if fast.next then
+				fast = fast.next
+			else
+				return false
+			end
+		else
+			return false
+		end
+
+		if slow == fast then
+			return true
+		end
+	end
+end
+
+print(hasCycle(input1))
+print(hasCycle(input2))
