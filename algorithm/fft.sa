@@ -360,31 +360,20 @@ end
 //C(x) = 56x^6 - 8x^5 - 34x^4 - 53x^3 - 9x^2 + 63x - 30
 input1 = {"0" = 0, "1" = 0, "2" = 0, "3" = 0, "4" = 7, "5" = -1, "6" = 1, "7" = -10}
 input2 = {"0" = 0, "1" = 0, "2" = 0, "3" = 0, "4" = 8, "5" = 0, "6" = -6, "7" = 3} 
-//---------------------dft--------------------------
-f1 = dft(input1)
-f2 = dft(input2)
-len = #f1
-for local i = len - 1, i >= 0, i -= 1 do
-	f1[i] = f1[i] * f2[i]
-end
-f2 = idft(f1)
-print_complex_array(f2)
-//----------------------fft recurse--------------------------
-f1 = fft(input1)
-f2 = fft(input2)
-len = #f1
-for local i = len - 1, i >= 0, i -= 1 do
-	f1[i] = f1[i] * f2[i]
-end
-f2 = ifft(f1)
-print_complex_array(f2)
 
-//----------------------fft iterative--------------------------
-f1 = fft_iterative(input1)
-f2 = fft_iterative(input2)
-len = #f1
-for local i = len - 1, i >= 0, i -= 1 do
-	f1[i] = f1[i] * f2[i]
+def fourier_transform(pos/*fft*/, neg/*ifft*/)
+	local f1 = pos(input1)
+	local f2 = pos(input2)
+	len = #f1
+	for local i = len - 1, i >= 0, i -= 1 do
+		f1[i] = f1[i] * f2[i]
+	end
+	f2 = neg(f1)
+	print_complex_array(f2)
 end
-f2 = ifft_iterative(f1)
-print_complex_array(f2)
+//---------------------dft--------------------------
+fourier_transform(dft, idft)
+//----------------------fft recurse--------------------------
+fourier_transform(fft, ifft)
+//----------------------fft iterative--------------------------
+fourier_transform(fft_iterative, ifft_iterative)
