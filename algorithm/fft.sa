@@ -1,0 +1,390 @@
+//complex 
+def new_complex(real, imaginary)
+	local complex = {}
+	complex.r = real        //real number
+	complex.i = imaginary   //imaginary number
+	complex._add = def (rhs)
+					     local r = complex.r
+						 local i = complex.i
+						 return new_complex(r + rhs.r, i + rhs.i)
+				   end
+	complex._pluseq = def (rhs) 
+							complex.r = complex.r + rhs.r 
+							complex.i = complex.i + rhs.i
+					  end
+	complex._sub = def (rhs)
+						 local r = complex.r
+						 local i = complex.i
+						 return new_complex(r - rhs.r, i - rhs.i)
+				   end
+	complex._minuseq = def (rhs)
+							complex.r = complex.r - rhs.r
+							complex.i = complex.i - rhs.i
+					   end
+	complex._mul = def (rhs)
+						 local r = complex.r
+						 local i = complex.i
+						 if type(rhs) == "table" then
+							return new_complex(r * rhs.r - i * rhs.i, r * rhs.i + i * rhs.r)
+						 else
+							return new_complex(r * rhs, i * rhs)
+						 end
+				    end
+	complex._muleq = def (rhs)
+						   local r = complex.r
+						   local i = complex.i
+						   if type(rhs) == "table" then
+							   complex.r = r * rhs.r - i * rhs.i
+							   complex.i = r * rhs.i + i * rhs.r
+						   else
+							   complex.r = r * rhs
+							   complex.i = i * rhs
+						   end
+					 end
+    complex._div = def (rhs)
+						 local r = complex.r
+						 local i = complex.i
+						 return new_complex(r / rhs, i / rhs)
+				  end
+	complex.diveq = def (rhs)
+					     complex.r = complex.r / rhs
+						 complex.i = complex.i / rhs
+					end
+	complex._equal = def (rhs)
+					       return complex.r == rhs.r && complex.i == rhs.i
+				  	 end
+	complex._default = def (str)
+						   print("operator undefined", str)
+					   end
+	complex.conjugate = def ()
+						   return new_complex(complex.r, -complex.i)
+						end
+	complex.module = def ()
+						   local r = complex.r
+						   local i = complex.i
+	                       return math.sqrt(r * r + i * i)
+					 end
+	complex.pow = def (p)
+				      if p == 0 then
+					      return new_complex(1, 0)
+					  else
+						  local ret = new_complex(complex.r, complex.i)
+						  while p > 1 do
+						      ret = complex * ret
+							  p -= 1
+						  end
+
+						  return ret
+					  end
+				  end
+	
+	complex.tostring = def () 
+						   local m = complex.module()
+						   local angle = math.degree(math.acos(complex.r / m))
+		                   print("real number:", complex.r, "imaginary number:", complex.i, "module:", m, "angle:", angle)
+					   end
+	
+	return complex
+end
+
+def print_complex_array(a)
+	local len = #a
+	for local i = 0, i < len, i += 1 do
+		a[i].tostring()
+	end
+
+	print("--------------------")
+end
+
+def print_array(a)
+	local len = #a
+	str = ""
+	for local i = 0, i < len, i += 1 do
+		str += tostring(i)
+		str += "  "
+	end
+
+	print(str)
+	print("--------------------")
+end
+
+//-------------------DFT------------------------
+def dft(a/*function coefficient*/)
+	local coe = {}
+	local len = #a
+	for local i = 0, i < len, i += 1 do
+		coe[i] = new_complex(a[i], 0)
+	end
+
+	local mat = {}
+	local angle = math.degree(2 * constant.PI / len)
+	local omega_n = new_complex(math.cos(angle), math.sin(angle))
+	local omega = new_complex(1, 0)
+	for local i = 0, i < len, i += 1 do
+		mat[i] = {}
+		for local j = 0, j < len, j += 1 do
+			local p = i * j
+			local m = omega_n.pow(p)
+			mat[i][j] = m 
+		end
+	end
+
+	local ret = {}
+	for local i = 0, i < len, i += 1 do
+	    ret[i] = mat[i][0] * coe[0]
+		for local j = 1, j < len, j += 1 do
+			ret[i] = ret[i] + mat[i][j] * coe[j]
+		end
+	end
+
+	return ret
+end
+
+def idft(a/*value*/)
+	local len = #a
+
+	local mat = {}
+	local angle = math.degree(-2 * constant.PI / len)
+	local omega_n = new_complex(math.cos(angle), math.sin(angle))
+	local omega = new_complex(1, 0)
+	for local i = 0, i < len, i += 1 do
+		mat[i] = {}
+		for local j = 0, j < len, j += 1 do
+			local p = i * j
+			local m = omega_n.pow(p)
+			mat[i][j] = m 
+		end
+	end
+
+	local ret = {}
+	for local i = 0, i < len, i += 1 do
+	    ret[i] = mat[i][0] * a[0]
+		for local j = 1, j < len, j += 1 do
+			ret[i] = ret[i] + mat[i][j] * a[j]
+		end
+		ret[i] = ret[i] / len
+	end
+
+	return ret
+end
+
+//---------------------------FFT RECURSE--------------------
+def fft(a/*function coefficient*/)
+	local len = #a
+	if len == 1 then
+		return new_complex(a[0], 0)
+	end
+	
+	//euler formula
+	//e^(2pi*k*w/n) = cos(2pi*k/n) + w*sin(2pi*k/n)
+	local angle = math.degree(2 * constant.PI / len)
+	local omega_n = new_complex(math.cos(angle), math.sin(angle))
+	local omega = new_complex(1, 0)
+	local a0 = {}
+	local a1 = {}
+	local i
+	for i = 0, i < len, i += 2 do
+		a0[i / 2] = a[i]
+		a1[i / 2] = a[i + 1]
+	end
+
+	local y0 = fft(a0)
+	local y1 = fft(a1)
+	local y = {}
+
+	if len == 2 then
+		y[0] = y0 + omega * y1
+		y[1] = y0 - omega * y1
+	else
+		local e = len / 2 - 1
+		for local k = 0, k <= e, k += 1 do
+			y[k] = y0[k] + omega * y1[k]
+			y[k + e + 1] = y0[k] - omega * y1[k]
+			
+			omega = omega * omega_n
+		end
+	end
+
+	return y
+end
+
+def ifft_recurse(a/*value*/)
+	local len = #a
+	if len == 1 then
+		return a[0]
+	end
+
+	//euler formula
+	//e^(2pi*k*w/n) = cos(2pi*k/n) + w*sin(2pi*k/n)
+	local angle = math.degree(-2 * constant.PI / len)
+	local omega_n = new_complex(math.cos(angle), math.sin(angle))
+	local omega = new_complex(1, 0)
+	local a0 = {}
+	local a1 = {}
+	local i
+	for i = 0, i < len, i += 2 do
+		a0[i / 2] = a[i]
+		a1[i / 2] = a[i + 1]
+	end
+
+	local y0 = ifft_recurse(a0)
+	local y1 = ifft_recurse(a1)
+	local y = {}
+
+	if len == 2 then
+		y[0] = y0 + omega * y1
+		y[1] = y0 - omega * y1
+	else
+		local e = len / 2 - 1
+		for local k = 0, k <= e, k += 1 do
+			y[k] = y0[k] + omega * y1[k]
+			y[k + e + 1] = y0[k] - omega * y1[k]
+			
+			omega = omega * omega_n
+		end
+	end
+
+	return y
+end
+
+def ifft(a/*value*/)
+	local len = #a
+	local y = ifft_recurse(a)
+	
+	for local i = 0, i < len, i += 1 do
+		y[i] = y[i] / len
+	end
+
+	return y
+end
+
+//------------------------FFT ITERATIVE
+def reverse_bit(n, lgn)
+    if n == 0 then
+		return 0
+	end
+
+	local t = {}
+	t.idx = 0
+	t.push = def (x) t[t.idx] = x t.idx = t.idx + 1 end
+	while n do
+		local m = n % 2
+		t.push(m)
+
+		n /= 2
+	end
+
+	local ret = 0
+	local base = 1
+	local len = t.idx
+	for local i = t.idx, i < lgn, i += 1 do
+		t[i] = 0
+	end
+	for local i = lgn - 1, i >= 0, i -= 1 do
+		ret += t[i] * base
+		base *= 2
+	end
+
+	return ret
+end
+
+def bit_reverse_copy(a)
+	local len = #a
+	local lgn = toint(math.log2(len))
+	local ret = {}
+	for local i = 0, i < len, i += 1 do
+	    local r = reverse_bit(i, lgn) 
+		ret[r] = a[i]
+	end
+
+	return ret
+end
+
+def fft_iterative(a/*function coefficient*/)
+	local A = bit_reverse_copy(a)
+	local len = #a
+	local lgn = toint(math.log2(len))
+	for local i = 0, i < len, i += 1 do
+		A[i] = new_complex(A[i], 0)
+	end
+	for local s = 1, s <= lgn, s += 1 do
+		local m = toint(math.pow(2, s))
+		local e = m / 2 - 1
+		local angle = math.degree(2 * constant.PI / m)
+		local omega_n = new_complex(math.cos(angle), math.sin(angle))
+		for local k = 0, k <= len - 1, k += m do
+			omega = new_complex(1, 0)
+			for local j = 0, j <= e, j += 1 do
+			    local t = omega * A[k + j + m / 2]
+				local u = A[k + j]
+				A[k + j] = u + t
+				A[k + j + m / 2] = u - t
+				omega *= omega_n
+			end
+		end
+	end
+
+	return A
+end
+
+def ifft_iterative(a/*value*/)
+	local A = bit_reverse_copy(a)
+	local len = #a
+	local lgn = toint(math.log2(len))
+	for local s = 1, s <= lgn, s += 1 do
+		local m = toint(math.pow(2, s))
+		local e = m / 2 - 1
+		local angle = math.degree(-2 * constant.PI / m)
+		local omega_n = new_complex(math.cos(angle), math.sin(angle))
+		for local k = 0, k <= len - 1, k += m do
+			omega = new_complex(1, 0)
+			for local j = 0, j <= e, j += 1 do
+			    local t = omega * A[k + j + m / 2]
+				local u = A[k + j]
+				A[k + j] = u + t
+				A[k + j + m / 2] = u - t
+				omega *= omega_n
+			end
+		end
+	end
+
+	for local i = 0, i < len, i += 1 do
+		A[i] = A[i] / len
+	end
+
+	return A
+end
+
+//A(x) = 7x^3 - x^2 + x - 10
+//B(x) = 8x^3 - 6x + 3
+//C(x) = 56x^6 - 8x^5 - 34x^4 - 53x^3 - 9x^2 + 63x - 30
+input1 = {"0" = 0, "1" = 0, "2" = 0, "3" = 0, "4" = 7, "5" = -1, "6" = 1, "7" = -10}
+input2 = {"0" = 0, "1" = 0, "2" = 0, "3" = 0, "4" = 8, "5" = 0, "6" = -6, "7" = 3} 
+//---------------------dft--------------------------
+f1 = dft(input1)
+f2 = dft(input2)
+len = #f1
+for local i = len - 1, i >= 0, i -= 1 do
+	f1[i] = f1[i] * f2[i]
+end
+f2 = idft(f1)
+print_complex_array(f2)
+//----------------------fft recurse--------------------------
+f1 = fft(input1)
+f2 = fft(input2)
+len = #f1
+for local i = len - 1, i >= 0, i -= 1 do
+	f1[i] = f1[i] * f2[i]
+end
+f2 = ifft(f1)
+print_complex_array(f2)
+
+//----------------------fft iterative--------------------------
+f1 = fft_iterative(input1)
+f2 = fft_iterative(input2)
+len = #f1
+for local i = len - 1, i >= 0, i -= 1 do
+	f1[i] = f1[i] * f2[i]
+end
+f2 = ifft_iterative(f1)
+print_complex_array(f2)
