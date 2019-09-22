@@ -1,14 +1,13 @@
-input1 = "1 + 1"
-input2 = "2 - 1 + 2"
-input3 = "(1 + (4 + 5 + 2) - 3) + (6 + 8)"
+input1 = "3+2*2"
+input2 = "3/2"
+input3 = "3+5/2"
+input4 = "3*3+2*4"
 
 def priority(op)
 	if op == "+" || op == "-" then
 		return 1
-	elif op == "*" || op == "/" then
-		return 2
 	else
-		return 3
+		return 2
 	end
 end
 
@@ -26,34 +25,18 @@ def calculate(s)
 		
 		if char == " " then
 			continue
-		elif char != "+" && char != "-" && 
-		   char != "*" && char != "/" &&
-		   char != "(" && char != ")" then
-		    output += char
+		elif char != "+" && char != "-" && char != "*" && char != "/" then
+			output += char
 		else
-			local c = false
 			while stack.top != 0 do
 				local top = stack.peek()
-				if char == ")" then
-					local op = stack.pop()
-					for local j = 0, j < 2, j += 1 do
-						while op != "(" && stack.top != 0 do
-							output += op
-							op = stack.pop()
-						end
-					end
-
-					c = true
-					break
-				end
-				if top != "(" && priority(top) >= priority(char) then
+				if priority(top) >= priority(char) then
 					output += stack.pop()
 				else
 					break
 				end
 			end
 			
-			if c then continue end
 			stack.push(char)
 		end
 	end
@@ -61,7 +44,7 @@ def calculate(s)
 	while stack.top != 0 do
 		output += stack.pop()
 	end
-	print(output)
+
 	return output
 end
 
@@ -96,4 +79,7 @@ def evalRPN(token)
 	return final
 end
 
+print(evalRPN(calculate(input1)))
+print(evalRPN(calculate(input2)))
 print(evalRPN(calculate(input3)))
+print(evalRPN(calculate(input4)))

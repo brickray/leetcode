@@ -70,7 +70,7 @@ def new_complex(real, imaginary)
 					  else
 						  local ret = new_complex(complex.r, complex.i)
 						  while p > 1 do
-						      ret = complex * ret
+						      ret *= complex
 							  p -= 1
 						  end
 
@@ -362,6 +362,7 @@ input1 = {"0" = 0, "1" = 0, "2" = 0, "3" = 0, "4" = 7, "5" = -1, "6" = 1, "7" = 
 input2 = {"0" = 0, "1" = 0, "2" = 0, "3" = 0, "4" = 8, "5" = 0, "6" = -6, "7" = 3} 
 
 def fourier_transform(pos/*fft*/, neg/*ifft*/)
+	local t0 = os.getclock()
 	local f1 = pos(input1)
 	local f2 = pos(input2)
 	len = #f1
@@ -370,10 +371,13 @@ def fourier_transform(pos/*fft*/, neg/*ifft*/)
 	end
 	f2 = neg(f1)
 	print_complex_array(f2)
+	print("time:", os.getclock() - t0)
 end
 //---------------------dft--------------------------
 fourier_transform(dft, idft)
-//----------------------fft recurse--------------------------
+//----------------------fft recurse-----------------
 fourier_transform(fft, ifft)
-//----------------------fft iterative--------------------------
+//----------------------fft iterative---------------
 fourier_transform(fft_iterative, ifft_iterative)
+
+io.input()

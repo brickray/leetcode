@@ -215,8 +215,7 @@ end
 
 seed(os.time())
 input = {}
-local i
-for i = 0, i < 20, i += 1 do
+for local i = 0, i < 20, i += 1 do
 	input[i] = uniformInt(-100, 100)
 end
 print_array(selection_sort(input, great))

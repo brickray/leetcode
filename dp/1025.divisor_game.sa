@@ -1,6 +1,6 @@
 
 def divisorGame(n)
-
+	return 1
 end
 
 print(divisorGame(3))

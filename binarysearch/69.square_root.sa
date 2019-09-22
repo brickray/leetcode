@@ -1,0 +1,45 @@
+def sqrt_bs(n)
+	local mid
+	local s = 0
+	local e = n
+	while true do
+		mid = (s + e) * 0.5
+		local sr = n - mid*mid
+		if math.abs(sr) < 0.0001 then
+			break
+		end
+		
+		if sr > 0 then
+			s = mid
+		else	
+			e = mid
+		end 
+	end
+
+	return mid
+end
+
+//y = x^2 - c
+//y' = 2*x
+def sqrt_newton(n)
+	local x = n * 0.5
+	local y
+	local yp
+	while true do
+		y = x * x - n
+		if math.abs(y) < 0.0001 then
+			break
+		end 
+
+		yp = 2*x
+		x = -y/yp + x
+	end
+
+	return x
+end
+
+print(sqrt_bs(4))
+print(sqrt_newton(4))
+print("------------------")
+print(sqrt_bs(8))
+print(sqrt_newton(8))

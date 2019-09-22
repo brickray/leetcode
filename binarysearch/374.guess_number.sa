@@ -1,0 +1,33 @@
+screte = 555
+
+def guess(num)
+	if screte == num then
+		return 0
+	elif screte > num then
+		return -1
+	else
+		return 1
+	end
+end
+
+def guessNumber(n)
+	local mid
+	local s = 0
+	local e = n
+	while true do
+		mid = (s + e) / 2
+		print(mid)
+		local ret = guess(mid)
+		if ret == 0 then
+			break
+		elif ret > 0 then
+			e = mid
+		else
+			s = mid
+		end
+	end
+
+	return mid
+end
+
+print(guessNumber(1024))
