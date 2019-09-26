@@ -1,0 +1,166 @@
+def tokenize(code)
+	local tokens = {size = 0, ptr = 0}
+	tokens.push = def (v) tokens[tokens.size] = v; tokens.size = tokens.size + 1 end
+	tokens.next = def () local ret = tokens[tokens.ptr]; tokens.ptr = tokens.ptr + 1 return ret end
+	tokens.back = def () tokens.ptr = tokens.ptr - 1 end
+	tokens.isend = def () return tokens.ptr >= tokens.size end
+
+	local len = #code
+	local p = 0
+	local c = string.at(code, p)
+	while p < len do
+		local tk = ""
+		local type
+		while c == " " do
+			p += 1
+			c = string.at(code, p)
+		end
+		if string.isdigit(c) then
+			while string.isdigit(c) do
+				tk += c
+				p += 1
+				c = string.at(code, p)
+			end
+
+			type = 0 //digit
+		elif c == "+" || c == "-" || c == "*" || c == "/" then
+			tk += c
+			p += 1
+			c = string.at(code, p)
+
+			type = 1 //operator
+		elif c == "(" || c == ")" then
+			tk += c
+			p += 1
+			c = string.at(code, p)
+
+			type = 2 //parentheses
+		end
+		
+		local token = {token = tk, type = type}
+		tokens.push(token)
+	end
+
+	return tokens
+end
+
+expr = null
+
+def matchTerm(tokens, term)
+	local tk = tokens.next() 
+	if !tk.type then
+		term = toint(tk.token)
+		return true
+	elif tk.token == "(" then
+		if expr(tokens, term) then
+			if tokens.isend() then
+				print("missing )")
+				return false
+			elif tokens.next().token != ")" then
+				print("missing )")
+				return false
+			else
+				return true
+			end
+		else
+			return false
+		end
+	else
+		tokens.back()
+		return false
+	end
+end
+
+def matchMul(tokens, term)
+	def matchMulTail(tokens, term)
+		if !tokens.isend() then
+			local tk = tokens.next().token
+			if tk == "*" then
+				local term1
+				matchTerm(tokens, &term1)
+				term *= term1
+				return matchMulTail(tokens, term)
+			elif tk == "/" then
+				local term1
+				matchTerm(tokens, &term1)
+				term /= term1
+				return matchMulTail(tokens, term)
+			else
+				tokens.back()
+				return true
+			end
+		else
+			return true
+		end
+	end
+
+	if !matchTerm(tokens, &term) then
+		return false
+	end
+
+	if !tokens.isend() then
+		return matchMulTail(tokens, term)
+	else
+		return true
+	end
+end
+
+def matchAdd(tokens, term)
+	def matchAddTail(tokens, term)
+		if !tokens.isend() then
+			local tk = tokens.next().token
+			if tk == "+" then
+				local t1
+				local b = matchMul(tokens, &t1)
+				term += t1
+				return b && matchAddTail(tokens, term)
+			elif tk == "-" then
+				local t1
+				local b = matchMul(tokens, &t1)
+				term -= t1
+				return b && matchAddTail(tokens, term)
+			else
+				tokens.back()
+				return true
+			end
+		else
+			return true
+		end
+	end
+
+	if !matchMul(tokens, &term) then
+		return false
+	end
+
+	if !tokens.isend() then
+		return matchAddTail(tokens, term)
+	else
+		return true
+	end
+end
+
+def parser(tokens)
+	expr = matchAdd
+	local len = tokens.size
+	local ret
+	if matchAdd(tokens, &ret) then
+		return ret
+	else
+		return "syntax error"
+	end
+end
+
+def print_tokens(tokens)
+	local len = tokens.size
+	local str = ""
+	local tt = ""
+	for local i = 0, i < len, i += 1 do
+		str += tokens[i].token
+		tt += tostring(tokens[i].type)
+	end
+
+	print(str)
+	print(tt)
+end
+
+print(parser(tokenize("1 + 7 - 3 - (5/(2*2) + 1 - (2 + 3)) ")))
