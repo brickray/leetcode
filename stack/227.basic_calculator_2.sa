@@ -2,6 +2,7 @@ input1 = "3+2*2"
 input2 = "3/2"
 input3 = "3+5/2"
 input4 = "3*3+2*4"
+input5 = "3-4-2"
 
 def priority(op)
 	if op == "+" || op == "-" then
@@ -83,3 +84,4 @@ print(evalRPN(calculate(input1)))
 print(evalRPN(calculate(input2)))
 print(evalRPN(calculate(input3)))
 print(evalRPN(calculate(input4)))
+print(evalRPN(calculate(input5)))

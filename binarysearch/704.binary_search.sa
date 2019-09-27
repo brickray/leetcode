@@ -1,0 +1,26 @@
+input1 = {"0" = -1, "1" = 0, "2" = 3, "3" = 5, "4" = 9, "5" = 12}
+
+def search(nums, target)
+	local len = #nums
+	local s = 0
+	local e = len
+	local mid = (s + e) / 2
+	while true do
+		if nums[mid] == target then
+			return mid
+		elif nums[mid] > target then
+			e = mid
+		else
+			s = mid
+		end
+
+		if mid == (s + e) / 2 then
+			return -1
+		else
+			mid = (s + e) / 2
+		end
+	end
+end
+
+print(search(input1, 9))
+print(search(input1, 2))
